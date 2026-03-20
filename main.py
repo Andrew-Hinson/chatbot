@@ -1,4 +1,5 @@
 import os
+import argparse
 from dotenv import load_dotenv
 from google import genai
 
@@ -13,7 +14,11 @@ def main():
         raise Exception("Gemeni API Key not found")
 
     client = genai.Client(api_key=api_key)
-    content = client.models.generate_content(model="gemini-2.5-flash", contents="Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum.")
+
+    parser = argparse.ArgumentParser(description="Chatbot")
+    parser.add_argument("user_prompt", type=str, help="User prompt")
+    args = parser.parse_args()
+    content = client.models.generate_content(model="gemini-2.5-flash", contents= args.user_prompt)
 
     if content.usage_metadata is not None:
         print(f"Prompt tokens: {content.usage_metadata.prompt_token_count}")
